@@ -44,7 +44,7 @@ public class Server {
 
                 if(input==-1) break;
 
-                System.out.println("Message Received: " + input);
+                System.out.println("Message received: " + input);
 
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 

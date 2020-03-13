@@ -36,8 +36,9 @@ public class Client {
 
             oos = new ObjectOutputStream(socket.getOutputStream());
 
+            oos.writeObject(number);
+
             if (number == -1) {
-                oos.writeObject(number);
                 //close stream
                 if (ois != null) ois.close();
                 oos.close();
@@ -45,7 +46,6 @@ public class Client {
                 System.out.println("Application is closed.");
                 break;
             } else {
-                oos.writeObject(number);
                 ois = new ObjectInputStream(socket.getInputStream());
                 //read response message
                 Object message = ois.readObject();

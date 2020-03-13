@@ -25,33 +25,29 @@ public class Client {
         ObjectOutputStream oos = null;
         ObjectInputStream ois = null;
 
-
+        Scanner scan = new Scanner(System.in);
         while (true) {
-            Socket socket = new Socket(host.getHostName(), 1410);
 
-            Scanner scan = new Scanner(System.in);
-            System.out.println("Please enter student number, type -1 to exit: ");
-
+            System.out.print("Please enter student number, type -1 to exit: ");
             int number = scan.nextInt();
-
-            oos = new ObjectOutputStream(socket.getOutputStream());
-
-            oos.writeObject(number);
 
             if (number == -1) {
                 //close stream
+                System.out.println("Application is closed.");
                 if (ois != null) ois.close();
                 oos.close();
-                socket.close();
-                System.out.println("Application is closed.");
                 break;
             } else {
-                ois = new ObjectInputStream(socket.getInputStream());
+                System.out.println("Sending id: " + number);
+                Socket clientSocket = new Socket(host, 1410);
+                oos = new ObjectOutputStream(clientSocket.getOutputStream());
+                oos.writeObject(number);
+                ois = new ObjectInputStream(clientSocket.getInputStream());
                 //read response message
                 Object message = ois.readObject();
                 System.out.println("Result: " + message.toString());
+                clientSocket.close();
             }
-
         }
     }
 }

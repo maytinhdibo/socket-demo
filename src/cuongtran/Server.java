@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * This class implements java Socket server
@@ -42,28 +43,16 @@ public class Server {
 
                 int input = (int) ois.readObject();
 
-                if(input==-1) break;
-
                 System.out.println("Message received: " + input);
 
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
-                for (Student student : fakeData) {
-                    if (student.getNumber() == input) {
-                        oos.writeObject(student);
-                        continue;
-                    }
-                }
-
-                oos.writeObject("Can not find this student");
-
-                ois.close();
-                oos.close();
-                socket.close();
+                Optional<Student> ret = fakeData.stream().filter(student -> student.getNumber() == input).findFirst();
+                if (ret.isPresent())
+                    oos.writeObject(ret.get());
+                else
+                    oos.writeObject("Can not find this student");
             }
-
-            System.out.println("Application is closed.");
-            server.close();
 
         } catch (Exception e) {
             e.printStackTrace();
